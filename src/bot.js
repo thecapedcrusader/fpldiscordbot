@@ -25,20 +25,24 @@ const client = new Client({
     partials: [Partials.Channel],
 });
 
-const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
+// const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
+// // client.rest.on('request') // or 'response'
 
-// When the client is ready, run this code (only once)
+// When the client is ready, run this code
 client.on('ready', async () => {
     console.log(`🤖 ${client.user.tag} 🤖 is spun up and ready!`);
-    console.log(client.channels);
+    // console.log(client.channels.cache, 'client channels');
+    // await and set timeout here
+    const botChannel = await client.channels.cache.find(channel => channel.name === 'test');
+    botChannel.send('if i could interval I would do it here');
 });
 
 
 client.on('messageCreate', async (message) => {
     try {
         console.log(message.content);
-        if (message.content === 'something came in the mail') {
-            message.reply('deez nuts');
+        if (message.content === 'ping') {
+            message.send('pong - from bot');
             const response = await fetch('https://fantasy.premierleague.com/api/bootstrap-static/');
             const data = await response.json();
             message.reply(JSON.stringify(data.events[0]));
